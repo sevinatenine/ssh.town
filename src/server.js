@@ -55,6 +55,7 @@ new Server({ hostKeys: [hostKey] }, (client) => {
                 ui.tty.columns = size.cols;
                 ui.tty.rows = size.rows;
                 ui.tty.emit("resize");
+                ui.resize();
             });
 
             session.on("shell", async (acceptShell) => {
@@ -74,7 +75,7 @@ new Server({ hostKeys: [hostKey] }, (client) => {
         });
     });
 
-    client.on("error", (err) => console.error("client error:", err.message));
+    client.on("error", (err) => console.error("client error:", err, err.message));
     client.on("close", () => ui?.screen?.destroy());
 }).listen(PORT, "0.0.0.0", () => {
     console.log(`ssh.town listening on :${PORT} ${chalk.cyan("Command:")} ${chalk.blue("ssh -p 2222 localhost")}`);

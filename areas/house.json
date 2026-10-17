@@ -1,0 +1,743 @@
+{
+  "id": "house",
+  "name": "House",
+  "spawn": {
+    "x": 7,
+    "y": 9
+  },
+  "tileTypes": {
+    "cobblestone": {
+      "name": "Cobblestone",
+      "description": "Weathered stone lies on the ground below you.",
+      "symbol": "=",
+      "color": "white"
+    },
+    "fountain": {
+      "name": "Fountain",
+      "description": "A fountain sprays water from it's base. ",
+      "symbol": "f",
+      "color": "cyan"
+    },
+    "grass": {
+      "name": "Grass",
+      "description": "Grass yk",
+      "symbol": "'",
+      "color": "green"
+    },
+    "tree": {
+      "name": "Tree",
+      "description": "",
+      "symbol": "|",
+      "color": "yellow"
+    },
+    "shop": {
+      "name": "Shop",
+      "description": "A shop in town!",
+      "symbol": "$",
+      "color": "yellowBright"
+    },
+    "house": {
+      "name": "House",
+      "description": "A town house.",
+      "symbol": "^",
+      "color": "blue"
+    },
+    "inn": {
+      "name": "Inn",
+      "description": "A place to eat, drink and sleep.",
+      "symbol": "%",
+      "color": "greenBright"
+    },
+    "blacksmith": {
+      "name": "Blacksmith",
+      "description": "A blacksmith ig",
+      "symbol": "b",
+      "color": "white"
+    },
+    "town_hall": {
+      "name": "Town Hall",
+      "description": "The town hall!",
+      "symbol": "t",
+      "color": "red"
+    },
+    "church": {
+      "name": "Church",
+      "description": "A church",
+      "symbol": "+",
+      "color": "magenta"
+    },
+    "graveyard": {
+      "name": "Graveyard",
+      "description": "Where the dead lie",
+      "symbol": "g",
+      "color": "cyan"
+    },
+    "stable": {
+      "name": "Stable",
+      "description": "Horses!",
+      "symbol": "s",
+      "color": "blue"
+    },
+    "stone_wall": {
+      "name": "Stone Wall",
+      "description": "A wall to keep out goblins",
+      "symbol": "#",
+      "color": "white"
+    },
+    "stone_gate": {
+      "name": "Stone Gate",
+      "description": "A gate",
+      "symbol": "_",
+      "color": "white"
+    },
+    "dirt": {
+      "name": "Dirt",
+      "description": "Dirt",
+      "symbol": ".",
+      "color": "yellow"
+    },
+    "tilled_dirt": {
+      "name": "Tilled Dirt",
+      "description": "Tilled dirt - farm land?",
+      "symbol": "=",
+      "color": "yellow"
+    },
+    "wooden_door": {
+      "name": "Wooden Door",
+      "description": "Door",
+      "symbol": "|",
+      "color": "white"
+    },
+    "wooden_door_exit": {
+      "name": "Wooden Door",
+      "description": "Exit",
+      "symbol": "|",
+      "color": "white",
+      "portalBack": true
+    },
+    "wooden_floor": {
+      "name": "Wooden Floor",
+      "description": "",
+      "symbol": "%",
+      "color": "yellow"
+    },
+    "dried_goods": {
+      "name": "Dried Goods",
+      "description": "Dried meat, pickled vegetables and herbs lie on the floor in sacks and hang from the ceiling.",
+      "symbol": ":",
+      "color": "green"
+    },
+    "table": {
+      "name": "Table",
+      "description": "",
+      "symbol": "-",
+      "color": "yellow"
+    },
+    "tools": {
+      "name": "Tools",
+      "description": "Various tools lay against the wall.",
+      "symbol": "t",
+      "color": "blue"
+    },
+    "fireplace": {
+      "name": "Fireplace",
+      "description": "Warm fire.",
+      "symbol": "!",
+      "color": "magentaBright"
+    },
+    "bed": {
+      "name": "Bed",
+      "description": "Warm and cozy.",
+      "symbol": "~",
+      "color": "red"
+    }
+  },
+  "tiles": [
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 12,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "type": "bed",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "type": "wooden_floor",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "type": "tools",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "type": "table",
+      "x": 5,
+      "y": 2
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 2
+    },
+    {
+      "type": "wooden_floor",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "type": "wooden_floor",
+      "x": 8,
+      "y": 2
+    },
+    {
+      "type": "wooden_floor",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "type": "wooden_floor",
+      "x": 10,
+      "y": 2
+    },
+    {
+      "type": "wooden_floor",
+      "x": 11,
+      "y": 2
+    },
+    {
+      "type": "wooden_floor",
+      "x": 12,
+      "y": 2
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 2
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "type": "bed",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "type": "wooden_floor",
+      "x": 3,
+      "y": 3
+    },
+    {
+      "type": "wooden_floor",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "type": "wooden_floor",
+      "x": 5,
+      "y": 3
+    },
+    {
+      "type": "wooden_door",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "type": "wooden_floor",
+      "x": 7,
+      "y": 3
+    },
+    {
+      "type": "table",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "type": "table",
+      "x": 9,
+      "y": 3
+    },
+    {
+      "type": "table",
+      "x": 10,
+      "y": 3
+    },
+    {
+      "type": "wooden_floor",
+      "x": 11,
+      "y": 3
+    },
+    {
+      "type": "fireplace",
+      "x": 12,
+      "y": 3
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 3
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 4
+    },
+    {
+      "type": "stone_wall",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "type": "wooden_door",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "type": "stone_wall",
+      "x": 4,
+      "y": 4
+    },
+    {
+      "type": "stone_wall",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 4
+    },
+    {
+      "type": "wooden_floor",
+      "x": 7,
+      "y": 4
+    },
+    {
+      "type": "table",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "type": "table",
+      "x": 9,
+      "y": 4
+    },
+    {
+      "type": "table",
+      "x": 10,
+      "y": 4
+    },
+    {
+      "type": "wooden_floor",
+      "x": 11,
+      "y": 4
+    },
+    {
+      "type": "fireplace",
+      "x": 12,
+      "y": 4
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 4
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "type": "dried_goods",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "type": "table",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 8,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 9,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 10,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 11,
+      "y": 5
+    },
+    {
+      "type": "wooden_floor",
+      "x": 12,
+      "y": 5
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 5
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 6
+    },
+    {
+      "type": "dried_goods",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "type": "wooden_floor",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "type": "wooden_floor",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "type": "wooden_floor",
+      "x": 5,
+      "y": 6
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "type": "stone_wall",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "type": "wooden_door",
+      "x": 8,
+      "y": 6
+    },
+    {
+      "type": "stone_wall",
+      "x": 9,
+      "y": 6
+    },
+    {
+      "type": "stone_wall",
+      "x": 10,
+      "y": 6
+    },
+    {
+      "type": "stone_wall",
+      "x": 11,
+      "y": 6
+    },
+    {
+      "type": "wooden_door",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 6
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "type": "dried_goods",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "type": "dried_goods",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "type": "dried_goods",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "type": "wooden_floor",
+      "x": 5,
+      "y": 7
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 7
+    },
+    {
+      "type": "wooden_floor",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "type": "wooden_floor",
+      "x": 8,
+      "y": 7
+    },
+    {
+      "type": "wooden_floor",
+      "x": 9,
+      "y": 7
+    },
+    {
+      "type": "stone_wall",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "type": "tools",
+      "x": 11,
+      "y": 7
+    },
+    {
+      "type": "wooden_floor",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 7
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 8
+    },
+    {
+      "type": "dried_goods",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "type": "dried_goods",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "type": "dried_goods",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "type": "dried_goods",
+      "x": 5,
+      "y": 8
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "type": "wooden_floor",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "type": "wooden_floor",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "type": "wooden_floor",
+      "x": 9,
+      "y": 8
+    },
+    {
+      "type": "stone_wall",
+      "x": 10,
+      "y": 8
+    },
+    {
+      "type": "tools",
+      "x": 11,
+      "y": 8
+    },
+    {
+      "type": "tools",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 8
+    },
+    {
+      "type": "stone_wall",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 2,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 3,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 4,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 5,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 6,
+      "y": 9
+    },
+    {
+      "type": "wooden_door_exit",
+      "x": 7,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 8,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 9,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 10,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 11,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 12,
+      "y": 9
+    },
+    {
+      "type": "stone_wall",
+      "x": 13,
+      "y": 9
+    }
+  ],
+  "rooms": []
+}

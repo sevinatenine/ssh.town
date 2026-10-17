@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 
 const dataFolder = path.join(import.meta.dirname, "../data");
+const areasFolder = path.join(import.meta.dirname, "../areas");
 
 const chatMessagesPath = path.join(dataFolder, "/chat.json");
 const accountsPath = path.join(dataFolder, "/accounts.json");
@@ -13,6 +14,16 @@ function get(path) {
     } catch (e) {
         return {};
     }
+}
+
+function getAreas() {
+    var out = {};
+    
+    for (var i of fs.readdirSync(areasFolder)) {
+        out[i.split(".")[0]] = JSON.parse(fs.readFileSync(path.join(areasFolder, i)));
+    }
+
+    return out;
 }
 
 function save(file, data) {
@@ -27,6 +38,8 @@ function getAccounts() {
 
 var chatMessages = get(chatMessagesPath);
 var users = get(usersPath);
+var areas = getAreas();
+
 var accounts = getAccounts();
 
 function sync() {
@@ -43,4 +56,5 @@ export default {
     set chatMessages(v) { chatMessages = v; },
     get users() { return users; },
     set users(v) { users = v; },
+    get areas() { return areas; },
 };

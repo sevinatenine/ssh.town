@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MUD Room Designer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#e9eef3;--paper:#f7f9fb;--ink:#1b2a3a;--mute:#5d6f81;--line:#c3cfdb;--grid:#d5dee8;--acc:#d98a1f;--accink:#fff;--link:#2f6f9f;--room:#ffffff;--bad:#b3392f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121b26;--paper:#1a2634;--ink:#dce6f0;--mute:#8da0b3;--line:#2f4156;--grid:#233245;--acc:#f0a63a;--accink:#121b26;--link:#6fb0df;--room:#22344a;--bad:#ef7d72}}
+:root[data-theme="dark"]{--bg:#121b26;--paper:#1a2634;--ink:#dce6f0;--mute:#8da0b3;--line:#2f4156;--grid:#233245;--acc:#f0a63a;--accink:#121b26;--link:#6fb0df;--room:#22344a;--bad:#ef7d72}
+*,*:before,*:after{box-sizing:inherit}
+[hidden]{display:none!important}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Atkinson Hyperlegible",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+header{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--paper)}
+h1{font-size:1.1rem;margin:0}
+.hint{color:var(--mute);font-size:.85rem;margin:0}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.tools button.on{background:var(--acc);border-color:var(--acc);color:var(--accink);font-weight:700}
+main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;padding:16px;align-items:start}
+@media (max-width:820px){main{grid-template-columns:minmax(0,1fr)}}
+#mapwrap{overflow:auto;max-height:78vh;border:1px solid var(--line);background:var(--paper);border-radius:6px}
+#stage{position:relative;width:max-content}
+#grid{display:grid;position:relative}
+#grid.picking{cursor:crosshair}
+.cell{width:36px;height:36px;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);display:flex;align-items:center;justify-content:center;cursor:pointer;font:600 16px "IBM Plex Mono",ui-monospace,monospace;user-select:none;position:relative}
+.cell:hover{background:var(--grid)}
+.cell.tile,.cell.room{z-index:2}
+.cell.room span{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--room);border:1.5px solid var(--ink);border-radius:4px;font-size:18px}
+.cell.sel{outline:3px solid var(--acc);outline-offset:-3px}
+.cell.room.sel span{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+svg#links{position:absolute;inset:0;pointer-events:none;z-index:1}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px;margin-bottom:16px}
+.panel h2{font-size:1rem;margin:0 0 10px}
+label{display:block;font-size:.85rem;color:var(--mute);margin:10px 0 3px}
+input,textarea,select,button{font:inherit;color:var(--ink)}
+input,textarea,select{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg)}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,.cell:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+textarea{resize:vertical;min-height:80px}
+.row{display:grid;grid-template-columns:64px 1fr;gap:8px}
+.sym{font:600 20px "IBM Plex Mono",ui-monospace,monospace;text-align:center}
+.exit{display:grid;grid-template-columns:48px 1fr auto;gap:8px;align-items:center;margin:4px 0}
+.exit b{font-weight:700}
+.chk{display:flex;gap:8px;align-items:center;margin-top:8px;color:var(--ink);font-size:.9rem}
+.chk input{width:auto}
+button{padding:6px 12px;border:1px solid var(--ink);border-radius:4px;background:var(--paper);cursor:pointer}
+button.primary{background:var(--acc);border-color:var(--acc);color:var(--accink);font-weight:700}
+button.danger{border-color:var(--bad);color:var(--bad)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#json{font:12px/1.4 "IBM Plex Mono",ui-monospace,monospace;min-height:180px;white-space:pre}
+#msg{font-size:.85rem;min-height:1.2em;color:var(--mute);margin-top:6px}
+#msg.err{color:var(--bad)}
+.empty{color:var(--mute)}
+.cell.spawn::after{content:"";position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--acc);border:1px solid var(--ink);z-index:3}
+</style>
+</head>
+<body>
+<header>
+  <h1>MUD room designer</h1>
+  <div class="tools" role="group" aria-label="Tool">
+    <button id="m-tile">Paint tiles</button>
+    <button id="m-room">Place room</button>
+    <button id="m-select">Select</button>
+    <button id="m-erase">Erase</button>
+  </div>
+  <p class="hint" id="hint"></p>
+  <p class="hint" id="pos" style="font-family:'IBM Plex Mono',ui-monospace,monospace;min-width:12ch">x: –, y: –</p>
+</header>
+<main>
+  <div id="mapwrap"><div id="stage"><div id="grid" role="grid" aria-label="Map"></div><svg id="links"></svg></div></div>
+  <div>
+    <section class="panel">
+      <h2>Area</h2>
+      <label for="a-id">ID</label><input id="a-id" placeholder="town_square">
+      <label for="a-name">Name</label><input id="a-name" placeholder="Town Square">
+      <label for="a-sx">Spawn</label>
+      <div class="row" style="grid-template-columns:1fr 1fr"><input id="a-sx" type="number" min="0" max="27" placeholder="x" aria-label="Spawn x"><input id="a-sy" type="number" min="0" max="17" placeholder="y" aria-label="Spawn y"></div>
+    </section>
+    <section class="panel" id="panel"></section>
+    <section class="panel" id="tpanel"></section>
+    <section class="panel">
+      <h2>World JSON</h2>
+      <label for="fmt">Format</label>
+      <select id="fmt"><option value="compact">Compact (tiles are implicit)</option><option value="expanded">Expanded (every tile is a room)</option></select>
+      <label for="json">JSON</label>
+      <textarea id="json" spellcheck="false"></textarea>
+      <div class="btns">
+        <button id="load" class="primary">Load JSON</button>
+        <button id="copy">Copy JSON</button>
+        <button id="clear" class="danger">Clear world</button>
+      </div>
+      <div id="msg" role="status"></div>
+    </section>
+  </div>
+</main>
+<script>
+(function(){
+var W=50,H=30,CELL=36;
+var DIRS=[["north",0,-1,"south"],["east",1,0,"west"],["south",0,1,"north"],["west",-1,0,"east"],["up",0,0,"down"],["down",0,0,"up"]];
+var OPP={north:"south",south:"north",east:"west",west:"east",up:"down",down:"up"};
+var COLORS={black:"#4a4f57",red:"#cd3131",green:"#0dbc79",yellow:"#e5e510",blue:"#3b82d6",magenta:"#bc3fbc",cyan:"#11a8cd",white:"#e5e5e5",blackBright:"#7a808a",redBright:"#f14c4c",greenBright:"#23d18b",yellowBright:"#f5f543",blueBright:"#5aa0f0",magentaBright:"#d670d6",cyanBright:"#29b8db",whiteBright:"#ffffff",gray:"#7a808a",grey:"#7a808a"};
+var COLOR_NAMES=["black","red","green","yellow","blue","magenta","cyan","white","blackBright","redBright","greenBright","yellowBright","blueBright","magentaBright","cyanBright","whiteBright"];
+var area={id:"",name:"",spawn:{x:null,y:null}};
+var cells={},types={},brush=null,mode="tile",selK=null,pick=null,twoWay=true,painting=false,counter=1;
+var $=function(id){return document.getElementById(id)};
+var grid=$("grid"),svg=$("links"),panel=$("panel"),tpanel=$("tpanel"),ta=$("json"),msg=$("msg"),hint=$("hint"),fmt=$("fmt");
+
+function say(t,err){msg.textContent=t;msg.className=err?"err":""}
+function key(x,y){return x+","+y}
+function pos(k){return k.split(",").map(Number)}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function ch(s){return Array.from(s||"")[0]||""}
+function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"")||"tile"}
+function roomKey(id){for(var k in cells)if(cells[k].kind==="room"&&cells[k].id===id)return k;return null}
+function ref(k){var c=cells[k];return c.kind==="room"?c.id:"@"+k}
+function resolve(r){if(!r)return null;if(r.charAt(0)==="@"){var k=r.slice(1);return cells[k]?k:null}return roomKey(r)}
+function keys(){return Object.keys(cells).sort(function(a,b){var p=pos(a),q=pos(b);return p[1]-q[1]||p[0]-q[0]})}
+function typeKeys(){return Object.keys(types)}
+function newRoomId(){var id;do{id="room_"+(counter++)}while(roomKey(id));return id}
+function labelOf(r){var k=resolve(r);if(!k)return r+" (missing)";var c=cells[k];return c.kind==="room"?c.name+" ("+c.id+")":"Tile at "+k.replace(",",", ")}
+function ensureType(){if(!typeKeys().length)types.brick_road={name:"Brick road",description:"A road of weathered red bricks.",symbol:"=",color:"red"};typeKeys().forEach(function(k){if(!types[k].color)types[k].color="white"});if(!types[brush])brush=typeKeys()[0]}
+
+function buildGrid(){
+  grid.style.gridTemplateColumns="repeat("+W+","+CELL+"px)";
+  for(var y=0;y<H;y++)for(var x=0;x<W;x++){
+    var c=document.createElement("div");c.className="cell";c.dataset.k=key(x,y);c.setAttribute("role","gridcell");grid.appendChild(c);
+  }
+  svg.setAttribute("width",W*CELL);svg.setAttribute("height",H*CELL);
+}
+function drawMap(){
+  var els=grid.children,tk=typeKeys();
+  grid.className=pick?"picking":"";
+  for(var i=0;i<els.length;i++){
+    var e=els[i],k=e.dataset.k,c=cells[k],cls="cell";
+    e.removeAttribute("style");
+    if(!c){e.className=cls;e.innerHTML="";e.title="";e.tabIndex=-1;continue}
+    if(k===selK)cls+=" sel";
+    if(c.kind==="room"){e.className=cls+" room";e.innerHTML="<span>"+esc(c.symbol||"#")+"</span>";e.title=c.name+" ("+c.id+")"}
+    else{
+      var t=types[c.type]||{};
+      e.className=cls+" tile";e.style.background="#141b22";e.style.color=COLORS[t.color]||COLORS.white;e.innerHTML=esc(t.symbol||".");e.title=(t.name||c.type)+" at "+k.replace(",",", ");
+    }
+    e.tabIndex=0;
+  }
+  var s="";
+  for(var k2 in cells){
+    var a=cells[k2],p=pos(k2);
+    DIRS.forEach(function(d){
+      var tk2=resolve(a.exits[d[0]]);if(!tk2)return;
+      var q=pos(tk2),vert=d[0]==="up"||d[0]==="down";
+      s+='<line x1="'+(p[0]*CELL+CELL/2)+'" y1="'+(p[1]*CELL+CELL/2)+'" x2="'+(q[0]*CELL+CELL/2)+'" y2="'+(q[1]*CELL+CELL/2)+'" stroke="'+(vert?"var(--acc)":"var(--link)")+'" stroke-width="2.5"'+(vert?' stroke-dasharray="4 4"':"")+'/>';
+    });
+  }
+  svg.innerHTML=s;
+  var sp=area.spawn;
+  if(sp&&sp.x!==null&&sp.y!==null&&sp.x<W&&sp.y<H){var se=grid.children[sp.y*W+sp.x];if(se)se.classList.add("spawn")}
+}
+
+function eid(k){var c=cells[k];return c.kind==="room"?c.id:c.type+"_"+k.replace(",","_")}
+function compact(){
+  var o={id:area.id,name:area.name,spawn:area.spawn,tileTypes:types,tiles:[],rooms:[]};
+  keys().forEach(function(k){
+    var c=cells[k],p=pos(k);
+    if(c.kind==="tile"){var t={type:c.type,x:p[0],y:p[1]};if(Object.keys(c.exits).length)t.exits=c.exits;o.tiles.push(t)}
+    else o.rooms.push({id:c.id,name:c.name,description:c.description,symbol:c.symbol,x:p[0],y:p[1],exits:c.exits});
+  });
+  return o;
+}
+function expanded(){
+  var out=[];
+  keys().forEach(function(k){
+    var c=cells[k],p=pos(k),ex={};
+    if(c.kind==="tile")DIRS.forEach(function(d){
+      if(!(d[1]||d[2]))return;
+      var nk=key(p[0]+d[1],p[1]+d[2]);
+      if(cells[nk]&&cells[nk].kind==="tile")ex[d[0]]=eid(nk);
+    });
+    for(var d in c.exits){var tk=resolve(c.exits[d]);if(tk)ex[d]=eid(tk)}
+    var info=c.kind==="room"?c:(types[c.type]||{});
+    out.push({id:eid(k),name:info.name,description:info.description,symbol:info.symbol,color:info.color,x:p[0],y:p[1],exits:ex});
+  });
+  return {id:area.id,name:area.name,spawn:area.spawn,rooms:out};
+}
+function toJson(){return JSON.stringify(fmt.value==="expanded"?expanded():compact(),null,2)}
+function drawJson(){ta.value=toJson()}
+
+function exitRows(c,self){
+  var h='<label>Manual exits</label>';
+  DIRS.forEach(function(d){
+    var cur=c.exits[d[0]]||"",opts='<option value="">none</option>',found=!cur;
+    for(var k in cells){
+      var r=cells[k];if(r.kind!=="room"||k===self)continue;
+      var s=r.id===cur;if(s)found=true;
+      opts+='<option value="'+esc(r.id)+'"'+(s?" selected":"")+'>'+esc(r.name)+" ("+esc(r.id)+")</option>";
+    }
+    if(!found)opts+='<option value="'+esc(cur)+'" selected>'+esc(labelOf(cur))+'</option>';
+    h+='<div class="exit"><b>'+d[0]+'</b><select data-dir="'+d[0]+'" aria-label="Exit '+d[0]+'">'+opts+'</select><button data-pick="'+d[0]+'">'+(pick===d[0]?"Cancel":"Pick")+'</button></div>';
+  });
+  h+='<label class="chk"><input type="checkbox" id="two"'+(twoWay?" checked":"")+'> Add the matching exit on the other end</label>';
+  return h;
+}
+function drawPanel(){
+  var c=cells[selK];
+  if(!c){panel.innerHTML='<h2>Selection</h2><p class="empty">Nothing selected. Use Select or Place room, then click a square.</p>';return}
+  var h;
+  if(c.kind==="room"){
+    h='<h2>Room</h2><label for="f-id">ID</label><input id="f-id" value="'+esc(c.id)+'">';
+    h+='<div class="row"><div><label for="sym">Symbol</label><input id="sym" class="sym" value="'+esc(c.symbol)+'"></div><div><label for="f-name">Name</label><input id="f-name" value="'+esc(c.name)+'"></div></div>';
+    h+='<label for="f-desc">Description</label><textarea id="f-desc">'+esc(c.description)+'</textarea>';
+    h+=exitRows(c,selK)+'<div class="btns"><button class="danger" id="del">Delete room</button></div>';
+  }else{
+    var p=pos(selK),auto=[];
+    DIRS.forEach(function(d){if(!(d[1]||d[2]))return;var n=cells[key(p[0]+d[1],p[1]+d[2])];if(n&&n.kind==="tile")auto.push(d[0])});
+    h='<h2>Tile at '+selK.replace(",",", ")+'</h2><label for="p-type">Type</label><select id="p-type">'+typeKeys().map(function(t){return'<option value="'+esc(t)+'"'+(t===c.type?" selected":"")+'>'+esc(types[t].name)+'</option>'}).join("")+'</select>';
+    h+='<p class="hint" style="margin-top:8px">Connects automatically to: '+(auto.length?auto.join(", "):"no neighboring tiles")+'.</p>';
+    h+=exitRows(c,selK)+'<div class="btns"><button class="danger" id="del">Delete tile</button></div>';
+  }
+  panel.innerHTML=h;
+}
+function drawTypes(){
+  var tk=typeKeys(),h='<h2>Tile types</h2><p class="hint">Tiles have no ID. Touching tiles link north, east, south and west on their own.</p>';
+  if(tk.length){
+    var t=types[brush];
+    h+='<label for="t-sel">Brush</label><select id="t-sel">'+tk.map(function(k){return'<option value="'+esc(k)+'"'+(k===brush?" selected":"")+'>'+esc(types[k].name)+'</option>'}).join("")+'</select>';
+    h+='<label for="t-id">ID</label><input id="t-id" value="'+esc(brush)+'">';
+    h+='<div class="row"><div><label for="t-sym">Symbol</label><input id="t-sym" class="sym" value="'+esc(t.symbol)+'"></div><div><label for="t-name">Name</label><input id="t-name" value="'+esc(t.name)+'"></div></div>';
+    var cur=t.color||"white",cn=COLOR_NAMES.slice();if(cn.indexOf(cur)<0)cn.push(cur);
+    h+='<label for="t-color">Color (chalk)</label><select id="t-color" style="background:#141b22;color:'+(COLORS[cur]||COLORS.white)+'">'+cn.map(function(n){return'<option value="'+esc(n)+'" style="background:#141b22;color:'+(COLORS[n]||COLORS.white)+'"'+(n===cur?" selected":"")+'>'+esc(n)+'</option>'}).join("")+'</select>';
+    h+='<label for="t-desc">Description</label><textarea id="t-desc">'+esc(t.description)+'</textarea>';
+  }
+  h+='<div class="btns"><button id="t-new">New type</button>'+(tk.length?'<button class="danger" id="t-del">Delete type</button>':"")+'</div>';
+  tpanel.innerHTML=h;
+}
+function refresh(){drawMap();drawJson();drawPanel();drawTypes()}
+
+var HINTS={tile:"Click or drag to paint tiles. Touching tiles connect on their own.",room:"Click an empty square to place a room with an ID, then link it with its exits.",select:"Click a square to edit it.",erase:"Click or drag to remove rooms and tiles."};
+function setHint(){hint.textContent=pick?"Click the square this exit should lead to. Esc cancels.":HINTS[mode]}
+function setMode(m){
+  mode=m;pick=null;painting=false;
+  ["tile","room","select","erase"].forEach(function(n){$("m-"+n).classList.toggle("on",n===m)});
+  grid.style.touchAction=(m==="tile"||m==="erase")?"none":"";
+  setHint();drawMap();drawPanel();
+}
+
+function setExit(k,dir,val){
+  var c=cells[k],prev=c.exits[dir],o=OPP[dir],pk=resolve(prev);
+  if(pk&&twoWay&&cells[pk].exits[o]===ref(k))delete cells[pk].exits[o];
+  if(val){c.exits[dir]=val;var tk=resolve(val);if(tk&&twoWay)cells[tk].exits[o]=ref(k)}
+  else delete c.exits[dir];
+}
+function erase(k){
+  var c=cells[k];if(!c)return false;
+  var r=ref(k);delete cells[k];
+  for(var j in cells){var ex=cells[j].exits;for(var d in ex)if(ex[d]===r)delete ex[d]}
+  if(selK===k)selK=null;
+  return true;
+}
+function act(k,fresh){
+  var c=cells[k];
+  if(pick&&fresh){
+    if(!c){say("Pick an existing room or tile.",true);return}
+    if(k===selK){say("An exit can’t lead back to its own square.",true);return}
+    setExit(selK,pick,ref(k));pick=null;setHint();refresh();say("Exit set.");return;
+  }
+  if(mode==="tile"){
+    if(c&&c.kind==="room"){if(fresh){selK=k;refresh()}return}
+    if(!brush){if(fresh)say("Create a tile type first.",true);return}
+    if(c&&c.type===brush)return;
+    if(c)c.type=brush;else cells[k]={kind:"tile",type:brush,exits:{}};
+    drawMap();drawJson();
+  }else if(mode==="erase"){
+    if(erase(k)){drawMap();drawJson()}
+  }else if(fresh){
+    if(c)selK=k;
+    else if(mode==="room"){cells[k]={kind:"room",id:newRoomId(),name:"New room",description:"",symbol:"#",exits:{}};selK=k}
+    else selK=null;
+    refresh();
+  }
+}
+function cellAt(e){var el=document.elementFromPoint(e.clientX,e.clientY);return el&&el.closest?el.closest(".cell"):null}
+grid.addEventListener("pointerdown",function(e){
+  var c=e.target.closest(".cell");if(!c)return;
+  painting=!pick&&(mode==="tile"||mode==="erase");
+  act(c.dataset.k,true);
+  if(painting)e.preventDefault();
+});
+grid.addEventListener("pointermove",function(e){
+  if(!painting)return;var c=cellAt(e);if(c)act(c.dataset.k,false);
+});
+function endPaint(){if(painting){painting=false;refresh()}}
+window.addEventListener("pointerup",endPaint);
+window.addEventListener("pointercancel",endPaint);
+grid.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  var c=e.target.closest(".cell");if(!c)return;
+  e.preventDefault();act(c.dataset.k,true);refresh();
+});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&pick){pick=null;setHint();refresh()}});
+
+panel.addEventListener("input",function(e){
+  var c=cells[selK];if(!c||c.kind!=="room")return;
+  if(e.target.id==="f-name"){c.name=e.target.value;drawMap();drawJson()}
+  else if(e.target.id==="f-desc"){c.description=e.target.value;drawJson()}
+  else if(e.target.id==="sym"){c.symbol=ch(e.target.value);e.target.value=c.symbol;drawMap();drawJson()}
+});
+panel.addEventListener("change",function(e){
+  var c=cells[selK];if(!c)return;
+  if(e.target.id==="two"){twoWay=e.target.checked;return}
+  if(e.target.id==="p-type"){c.type=e.target.value;refresh();return}
+  if(e.target.id==="f-id"){
+    var v=e.target.value.trim().replace(/\s+/g,"_");
+    if(!v||(v!==c.id&&roomKey(v))){say(v?"That ID is already used.":"ID can’t be empty.",true);e.target.value=c.id;return}
+    var old=c.id;c.id=v;
+    for(var j in cells){var ex=cells[j].exits;for(var d in ex)if(ex[d]===old)ex[d]=v}
+    refresh();say("ID changed; exits updated.");return;
+  }
+  var dir=e.target.dataset&&e.target.dataset.dir;
+  if(dir){setExit(selK,dir,e.target.value);refresh()}
+});
+panel.addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.pick){pick=pick===b.dataset.pick?null:b.dataset.pick;setHint();drawMap();drawPanel();return}
+  if(b.id==="del"){erase(selK);refresh();say("Deleted.")}
+});
+
+tpanel.addEventListener("input",function(e){
+  var t=types[brush];if(!t)return;
+  if(e.target.id==="t-name"){t.name=e.target.value;drawJson()}
+  else if(e.target.id==="t-desc"){t.description=e.target.value;drawJson()}
+  else if(e.target.id==="t-sym"){t.symbol=ch(e.target.value);e.target.value=t.symbol;drawMap();drawJson()}
+});
+tpanel.addEventListener("change",function(e){
+  if(e.target.id==="t-sel"){brush=e.target.value;drawTypes();return}
+  if(e.target.id==="t-color"){types[brush].color=e.target.value;drawTypes();drawMap();drawJson();return}
+  if(e.target.id==="t-id"){
+    var raw=e.target.value.trim(),v=slug(raw);
+    if(!raw||(v!==brush&&types[v])){say(raw?"That tile type ID is already used.":"ID can’t be empty.",true);e.target.value=brush;return}
+    if(v!==brush){
+      var rebuilt={};
+      typeKeys().forEach(function(k){rebuilt[k===brush?v:k]=types[k]});
+      for(var j in cells)if(cells[j].kind==="tile"&&cells[j].type===brush)cells[j].type=v;
+      types=rebuilt;brush=v;
+    }
+    refresh();say("Tile type ID set to “"+v+"”.");
+  }
+});
+tpanel.addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.id==="t-new"){
+    var base="new_tile",k=base,n=1;while(types[k])k=base+"_"+(n++);
+    types[k]={name:"New tile",description:"",symbol:".",color:"white"};brush=k;refresh();
+  }else if(b.id==="t-del"){
+    for(var j in cells)if(cells[j].kind==="tile"&&cells[j].type===brush){say("Erase every tile of this type first.",true);return}
+    delete types[brush];brush=typeKeys()[0]||null;refresh();say("Tile type deleted.");
+  }
+});
+
+fmt.addEventListener("change",drawJson);
+$("load").addEventListener("click",function(){
+  try{
+    var data=JSON.parse(ta.value),isArr=Array.isArray(data),list=isArr?data:(data.rooms||[]);
+    var nc={},nt=(!isArr&&data.tileTypes)||{},tl=(!isArr&&data.tiles)||[];
+    function clamp(v,m){return Math.max(0,Math.min(m-1,v|0))}
+    tl.forEach(function(t){
+      if(!nt[t.type])nt[t.type]={name:String(t.type),description:"",symbol:"."};
+      nc[key(clamp(t.x,W),clamp(t.y,H))]={kind:"tile",type:t.type,exits:t.exits||{}};
+    });
+    list.forEach(function(r,i){
+      if(!r||!r.id)throw new Error("Room "+(i+1)+" has no id.");
+      nc[key(clamp(r.x,W),clamp(r.y,H))]={kind:"room",id:String(r.id),name:r.name||"",description:r.description||"",symbol:ch(r.symbol)||"#",exits:r.exits||{}};
+    });
+    cells=nc;types=nt;selK=null;pick=null;var sp0=(!isArr&&data.spawn)||{};area={id:(!isArr&&data.id)||"",name:(!isArr&&data.name)||"",spawn:{x:Number.isInteger(sp0.x)?sp0.x:null,y:Number.isInteger(sp0.y)?sp0.y:null}};syncArea();ensureType();refresh();setHint();
+    say("Loaded "+tl.length+" tiles and "+list.length+" rooms.");
+  }catch(err){say("Couldn’t load: "+err.message,true)}
+});
+$("copy").addEventListener("click",function(){
+  drawJson();
+  try{navigator.clipboard.writeText(ta.value).then(function(){say("Copied.")},function(){ta.select();say("Select and copy the text above.")})}
+  catch(e){ta.select();say("Select and copy the text above.")}
+});
+$("clear").addEventListener("click",function(){
+  if(!Object.keys(cells).length)return;
+  cells={};selK=null;pick=null;refresh();say("World cleared.");
+});
+["tile","room","select","erase"].forEach(function(n){$("m-"+n).addEventListener("click",function(){setMode(n)})});
+
+var posEl=$("pos");
+function showPos(e){var c=e.target.closest&&e.target.closest(".cell");posEl.textContent=c?"x: "+c.dataset.k.replace(",",", y: "):"x: –, y: –"}
+grid.addEventListener("pointermove",showPos);
+grid.addEventListener("pointerleave",function(){posEl.textContent="x: –, y: –"});
+grid.addEventListener("focusin",showPos);
+function syncArea(){$("a-id").value=area.id;$("a-name").value=area.name;$("a-sx").value=area.spawn.x===null?"":area.spawn.x;$("a-sy").value=area.spawn.y===null?"":area.spawn.y}
+function spawnIn(e,axis){var v=e.target.value;area.spawn[axis]=v===""?null:Math.max(0,Math.min(axis==="x"?W-1:H-1,parseInt(v,10)||0));syncArea();drawMap();drawJson()}
+$("a-sx").addEventListener("change",function(e){spawnIn(e,"x")});
+$("a-sy").addEventListener("change",function(e){spawnIn(e,"y")});
+$("a-name").addEventListener("input",function(e){area.name=e.target.value;drawJson()});
+$("a-id").addEventListener("change",function(e){var raw=e.target.value.trim();area.id=raw?slug(raw):"";syncArea();drawJson()});
+
+buildGrid();ensureType();refresh();setMode("tile");
+})();
+</script>
+</body>
+</html>
