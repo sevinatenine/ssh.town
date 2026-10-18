@@ -26,6 +26,8 @@ ssh -p 2222 localhost
 npm run server
 ```
 
+> NOTE: You might have to regenerate the SSH keys in the keys folder.
+
 Or run it directly:
 
 ```bash
