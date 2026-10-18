@@ -1,2 +1,4 @@
 keys/*
 node_modules/*
+data/accounts.mine.json
+data/users.mine.json

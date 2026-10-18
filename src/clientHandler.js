@@ -1,6 +1,6 @@
-import { Screen, Box, Textarea, Text } from "@unblessed/node";
+import { Screen, Box, Textarea, Text, Question } from "@unblessed/node";
 
-import { resolveUser } from "./auth.js"
+import { resolveUser, logOutUser } from "./auth.js"
 import { makeTTY } from "./ui.js";
 import chalk from "chalk";
 import { getDateTimeString } from "./utils.js";
@@ -12,8 +12,8 @@ import { getRoom, getArea, getSpawn } from "./rooms.js";
 var messageBoxHeight = 5;
 const placeholderText = 'Press `t` to chat.';
 
-function startUI(stream, pty, username, events) {
-    let screen, topbar, topbarRight, sidebar, main, right, info, messageBox, bottomText;
+function startUI(stream, pty, username, events, onLogout) {
+    let screen, topbar, topbarRight, sidebar, main, right, info, messageBox, bottomText, confirmBox;
     db.users[username] ??= {};
     const user = db.users[username];
 
@@ -79,9 +79,9 @@ function startUI(stream, pty, username, events) {
         value: placeholderText
     });
 
-    const INFO_H = 5;
+    const INFO_H = 6;
 
-    const RIGHT_W = 30; 
+    const RIGHT_W = 30;
     const BODY_TOP = TOPBAR_H - 1;
     const BODY_H = `100%-${BODY_TOP + (INFO_H - 1)}`;
 
@@ -110,7 +110,7 @@ function startUI(stream, pty, username, events) {
 
     bottomText = new Text({
         parent: right,
-        bottom: 0, 
+        bottom: 0,
         left: 0,
         content: ''
     });
@@ -126,6 +126,25 @@ function startUI(stream, pty, username, events) {
         tags: true,
     });
 
+    confirmBox = new Question({
+        parent: screen,
+        top: 'center',
+        left: 'center',
+        width: 50,
+        height: 9,
+        padding: { left: 1, right: 1 },
+        border: { type: 'line' },
+        style: { border: { fg: 'blue' }, bg: 'black', fg: 'white' },
+        label: ' Confirmation Required ',
+        tags: true,
+        keys: true,
+        mouse: true,
+        hidden: true
+    });
+
+    confirmBox._.okay.top = 5;
+    confirmBox._.cancel.top = 5;
+
     screen.key(["q"], () => {
         if (typing) return;
         screen.destroy();
@@ -135,6 +154,34 @@ function startUI(stream, pty, username, events) {
     screen.key(["C-c"], () => {
         screen.destroy();
         stream.end();
+    });
+
+    var confirming = false;
+
+    function confirmLogout() {
+        const msg = 'Are you sure you want to logout? (y/n)\n\nThis session will end, and new sessions will ask you to log in.';
+
+        confirming = true;
+        confirmBox.setFront();
+        confirmBox.ask(msg, (err, value) => {
+            confirming = false;
+            confirmBox.hide();
+            if (value) {
+                screen.destroy();
+                onLogout();
+            } else {
+                main.focus();
+                screen.render();
+            }
+        });
+        confirmBox.setContent(msg);
+        screen.render();
+    }
+
+
+    screen.key(["l"], () => {
+        if (typing || confirming) return;
+        confirmLogout();
     });
 
     let typing = false;
@@ -289,7 +336,7 @@ function startUI(stream, pty, username, events) {
 
     function formatSeconds(seconds) {
         if (seconds < 60) return "< 1 minute";
-        
+
         const minutes = seconds / 60;
         const hours = minutes / 60;
         const days = hours / 24;
@@ -401,7 +448,7 @@ function startUI(stream, pty, username, events) {
 
     messageBox.on('blur', () => {
         if (messageBox.value.trim() === '') {
-            messageBox.setValue(placeholderText); 
+            messageBox.setValue(placeholderText);
             messageBox.style.fg = 'gray';
             screen.render();
         }
@@ -428,24 +475,28 @@ function startUI(stream, pty, username, events) {
 
     screen.key(["w", "up"], () => {
         if (typing) return;
+        if (getRoom(user.area, user.x, user.y - 1)?.blocked) return;
         user.y--;
         roomChange();
     });
 
     screen.key(["a", "left"], () => {
         if (typing) return;
+        if (getRoom(user.area, user.x - 1, user.y)?.blocked) return;
         user.x--;
         roomChange();
     });
 
     screen.key(["d", "right"], () => {
         if (typing) return;
+        if (getRoom(user.area, user.x + 1, user.y)?.blocked) return;
         user.x++;
         roomChange();
     });
 
     screen.key(["s", "down"], () => {
         if (typing) return;
+        if (getRoom(user.area, user.x, user.y + 1)?.blocked) return;
         user.y++;
         roomChange();
     })
@@ -460,38 +511,74 @@ function startUI(stream, pty, username, events) {
     return { screen, tty, loadChat, updateTime, updateSidebar, updateStreak, resize };
 }
 
+function runSession(stream, pty, name, events, setCurrent) {
+    return new Promise((resolve) => {
+        let ui;
+        let lastTick = Date.now();
+
+        const onChat = () => ui.loadChat();
+
+        const playTimer = setInterval(() => {
+            const now = Date.now();
+            const user = db.users[name];
+            if (user) user.playTime = (user.playTime ?? 0) + (now - lastTick) / 1000;
+            lastTick = now;
+            ui.updateStreak();
+            ui.updateSidebar();
+            ui.updateTime();
+        }, 1000);
+
+        function cleanup() {
+            clearInterval(playTimer);
+            events.off("chat", onChat);
+            stream.off("close", cleanup);
+            setCurrent(null);
+            resolve();
+        }
+
+        ui = startUI(stream, pty, name, events, cleanup);
+        setCurrent(ui);
+
+        events.on("chat", onChat);
+        stream.on("close", cleanup);
+        ui.loadChat();
+    });
+}
+
 async function clientHandler(stream, pty, fp, events) {
-    const name = await resolveUser(stream, fp);
+    let current = null;
+    let open = true;
+    stream.on("close", () => { open = false; });
+
+    let name = await resolveUser(stream, fp);
     if (!name) {
         stream.write("Too many failed attempts. Bye!\r\n");
         return stream.end();
     }
 
-    const ui = startUI(stream, pty, name, events);
+    (async () => {
+        while (open && name) {
+            await runSession(stream, pty, name, events, (ui) => { current = ui; });
+            if (!open) break;
+            stream.write("\r\nLogged out.\r\n");
 
-    const onChat = () => ui.loadChat();
-    events.on("chat", onChat);
+            name = await resolveUser(stream, fp);
+            logOutUser(name);
 
-    // const timer = setInterval(, 500);
+            stream.end();
 
-    let lastTick = Date.now();
-    const playTimer = setInterval(() => {
-        const now = Date.now();
-        const user = db.users[name];
-        if (user) user.playTime = (user.playTime ?? 0) + (now - lastTick) / 1000;
-        lastTick = now;
-        ui.updateStreak();
-        ui.updateSidebar();
-        ui.updateTime();
-    }, 1000);
+            if (!name && open) {
+                stream.write("Too many failed attempts. Bye!\r\n");
+                stream.end();
+            }
+        }
+    })();
 
-    stream.on("close", () => {
-        clearInterval(playTimer);
-        events.off("chat", onChat);
-    });
-
-    ui.loadChat();
-    return ui;
+    return {
+        resize: () => current?.resize(),
+        get screen() { return current?.screen; },
+        get tty() { return current?.tty; },
+    };
 }
 
 export { clientHandler };

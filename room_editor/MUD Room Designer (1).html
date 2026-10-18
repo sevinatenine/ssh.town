@@ -54,6 +54,8 @@ button.danger{border-color:var(--bad);color:var(--bad)}
 #msg{font-size:.85rem;min-height:1.2em;color:var(--mute);margin-top:6px}
 #msg.err{color:var(--bad)}
 .empty{color:var(--mute)}
+.cell.blocked{box-shadow:inset 0 0 0 1px rgba(240,70,70,.85)}
+.cell.blocked::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(240,70,70,.6) 0 3px,transparent 3px 7px);pointer-events:none}
 .cell.spawn::after{content:"";position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--acc);border:1px solid var(--ink);z-index:3}
 </style>
 </head>
@@ -65,6 +67,7 @@ button.danger{border-color:var(--bad);color:var(--bad)}
     <button id="m-room">Place room</button>
     <button id="m-select">Select</button>
     <button id="m-erase">Erase</button>
+    <button id="m-block">Block</button>
   </div>
   <p class="hint" id="hint"></p>
   <p class="hint" id="pos" style="font-family:'IBM Plex Mono',ui-monospace,monospace;min-width:12ch">x: –, y: –</p>
@@ -104,6 +107,7 @@ var OPP={north:"south",south:"north",east:"west",west:"east",up:"down",down:"up"
 var COLORS={black:"#4a4f57",red:"#cd3131",green:"#0dbc79",yellow:"#e5e510",blue:"#3b82d6",magenta:"#bc3fbc",cyan:"#11a8cd",white:"#e5e5e5",blackBright:"#7a808a",redBright:"#f14c4c",greenBright:"#23d18b",yellowBright:"#f5f543",blueBright:"#5aa0f0",magentaBright:"#d670d6",cyanBright:"#29b8db",whiteBright:"#ffffff",gray:"#7a808a",grey:"#7a808a"};
 var COLOR_NAMES=["black","red","green","yellow","blue","magenta","cyan","white","blackBright","redBright","greenBright","yellowBright","blueBright","magentaBright","cyanBright","whiteBright"];
 var area={id:"",name:"",spawn:{x:null,y:null}};
+var blockTo=true;
 var cells={},types={},brush=null,mode="tile",selK=null,pick=null,twoWay=true,painting=false,counter=1;
 var $=function(id){return document.getElementById(id)};
 var grid=$("grid"),svg=$("links"),panel=$("panel"),tpanel=$("tpanel"),ta=$("json"),msg=$("msg"),hint=$("hint"),fmt=$("fmt");
@@ -141,7 +145,7 @@ function drawMap(){
     if(c.kind==="room"){e.className=cls+" room";e.innerHTML="<span>"+esc(c.symbol||"#")+"</span>";e.title=c.name+" ("+c.id+")"}
     else{
       var t=types[c.type]||{};
-      e.className=cls+" tile";e.style.background="#141b22";e.style.color=COLORS[t.color]||COLORS.white;e.innerHTML=esc(t.symbol||".");e.title=(t.name||c.type)+" at "+k.replace(",",", ");
+      e.className=cls+" tile"+(c.blocked?" blocked":"");e.style.background="#141b22";e.style.color=COLORS[t.color]||COLORS.white;e.innerHTML=esc(t.symbol||".");e.title=(t.name||c.type)+" at "+k.replace(",",", ");
     }
     e.tabIndex=0;
   }
@@ -164,7 +168,7 @@ function compact(){
   var o={id:area.id,name:area.name,spawn:area.spawn,tileTypes:types,tiles:[],rooms:[]};
   keys().forEach(function(k){
     var c=cells[k],p=pos(k);
-    if(c.kind==="tile"){var t={type:c.type,x:p[0],y:p[1]};if(Object.keys(c.exits).length)t.exits=c.exits;o.tiles.push(t)}
+    if(c.kind==="tile"){var t={type:c.type,x:p[0],y:p[1]};if(c.blocked)t.blocked=true;if(Object.keys(c.exits).length)t.exits=c.exits;o.tiles.push(t)}
     else o.rooms.push({id:c.id,name:c.name,description:c.description,symbol:c.symbol,x:p[0],y:p[1],exits:c.exits});
   });
   return o;
@@ -176,11 +180,11 @@ function expanded(){
     if(c.kind==="tile")DIRS.forEach(function(d){
       if(!(d[1]||d[2]))return;
       var nk=key(p[0]+d[1],p[1]+d[2]);
-      if(cells[nk]&&cells[nk].kind==="tile")ex[d[0]]=eid(nk);
+      if(cells[nk]&&cells[nk].kind==="tile"&&!cells[nk].blocked&&!c.blocked)ex[d[0]]=eid(nk);
     });
     for(var d in c.exits){var tk=resolve(c.exits[d]);if(tk)ex[d]=eid(tk)}
     var info=c.kind==="room"?c:(types[c.type]||{});
-    out.push({id:eid(k),name:info.name,description:info.description,symbol:info.symbol,color:info.color,x:p[0],y:p[1],exits:ex});
+    out.push({id:eid(k),name:info.name,description:info.description,symbol:info.symbol,color:info.color,blocked:c.blocked||undefined,x:p[0],y:p[1],exits:ex});
   });
   return {id:area.id,name:area.name,spawn:area.spawn,rooms:out};
 }
@@ -216,6 +220,7 @@ function drawPanel(){
     DIRS.forEach(function(d){if(!(d[1]||d[2]))return;var n=cells[key(p[0]+d[1],p[1]+d[2])];if(n&&n.kind==="tile")auto.push(d[0])});
     h='<h2>Tile at '+selK.replace(",",", ")+'</h2><label for="p-type">Type</label><select id="p-type">'+typeKeys().map(function(t){return'<option value="'+esc(t)+'"'+(t===c.type?" selected":"")+'>'+esc(types[t].name)+'</option>'}).join("")+'</select>';
     h+='<p class="hint" style="margin-top:8px">Connects automatically to: '+(auto.length?auto.join(", "):"no neighboring tiles")+'.</p>';
+    h+='<label class="chk"><input type="checkbox" id="p-block"'+(c.blocked?" checked":"")+'> Blocked (can’t be walked on)</label>';
     h+=exitRows(c,selK)+'<div class="btns"><button class="danger" id="del">Delete tile</button></div>';
   }
   panel.innerHTML=h;
@@ -236,12 +241,12 @@ function drawTypes(){
 }
 function refresh(){drawMap();drawJson();drawPanel();drawTypes()}
 
-var HINTS={tile:"Click or drag to paint tiles. Touching tiles connect on their own.",room:"Click an empty square to place a room with an ID, then link it with its exits.",select:"Click a square to edit it.",erase:"Click or drag to remove rooms and tiles."};
+var HINTS={tile:"Click or drag to paint tiles. Touching tiles connect on their own.",room:"Click an empty square to place a room with an ID, then link it with its exits.",select:"Click a square to edit it.",erase:"Click or drag to remove rooms and tiles.",block:"Click or drag over tiles to block them so nobody can walk there. Start on a blocked tile to unblock instead."};
 function setHint(){hint.textContent=pick?"Click the square this exit should lead to. Esc cancels.":HINTS[mode]}
 function setMode(m){
   mode=m;pick=null;painting=false;
-  ["tile","room","select","erase"].forEach(function(n){$("m-"+n).classList.toggle("on",n===m)});
-  grid.style.touchAction=(m==="tile"||m==="erase")?"none":"";
+  ["tile","room","select","erase","block"].forEach(function(n){$("m-"+n).classList.toggle("on",n===m)});
+  grid.style.touchAction=(m==="tile"||m==="erase"||m==="block")?"none":"";
   setHint();drawMap();drawPanel();
 }
 
@@ -271,6 +276,11 @@ function act(k,fresh){
     if(c&&c.type===brush)return;
     if(c)c.type=brush;else cells[k]={kind:"tile",type:brush,exits:{}};
     drawMap();drawJson();
+  }else if(mode==="block"){
+    if(fresh)blockTo=c&&c.kind==="tile"?!c.blocked:true;
+    if(!c||c.kind!=="tile"||!!c.blocked===blockTo)return;
+    if(blockTo)c.blocked=true;else delete c.blocked;
+    drawMap();drawJson();
   }else if(mode==="erase"){
     if(erase(k)){drawMap();drawJson()}
   }else if(fresh){
@@ -283,7 +293,7 @@ function act(k,fresh){
 function cellAt(e){var el=document.elementFromPoint(e.clientX,e.clientY);return el&&el.closest?el.closest(".cell"):null}
 grid.addEventListener("pointerdown",function(e){
   var c=e.target.closest(".cell");if(!c)return;
-  painting=!pick&&(mode==="tile"||mode==="erase");
+  painting=!pick&&(mode==="tile"||mode==="erase"||mode==="block");
   act(c.dataset.k,true);
   if(painting)e.preventDefault();
 });
@@ -310,6 +320,7 @@ panel.addEventListener("change",function(e){
   var c=cells[selK];if(!c)return;
   if(e.target.id==="two"){twoWay=e.target.checked;return}
   if(e.target.id==="p-type"){c.type=e.target.value;refresh();return}
+  if(e.target.id==="p-block"){if(e.target.checked)c.blocked=true;else delete c.blocked;drawMap();drawJson();return}
   if(e.target.id==="f-id"){
     var v=e.target.value.trim().replace(/\s+/g,"_");
     if(!v||(v!==c.id&&roomKey(v))){say(v?"That ID is already used.":"ID can’t be empty.",true);e.target.value=c.id;return}
@@ -366,7 +377,7 @@ $("load").addEventListener("click",function(){
     function clamp(v,m){return Math.max(0,Math.min(m-1,v|0))}
     tl.forEach(function(t){
       if(!nt[t.type])nt[t.type]={name:String(t.type),description:"",symbol:"."};
-      nc[key(clamp(t.x,W),clamp(t.y,H))]={kind:"tile",type:t.type,exits:t.exits||{}};
+      nc[key(clamp(t.x,W),clamp(t.y,H))]=Object.assign({kind:"tile",type:t.type,exits:t.exits||{}},t.blocked===true?{blocked:true}:{});
     });
     list.forEach(function(r,i){
       if(!r||!r.id)throw new Error("Room "+(i+1)+" has no id.");
@@ -385,7 +396,7 @@ $("clear").addEventListener("click",function(){
   if(!Object.keys(cells).length)return;
   cells={};selK=null;pick=null;refresh();say("World cleared.");
 });
-["tile","room","select","erase"].forEach(function(n){$("m-"+n).addEventListener("click",function(){setMode(n)})});
+["tile","room","select","erase","block"].forEach(function(n){$("m-"+n).addEventListener("click",function(){setMode(n)})});
 
 var posEl=$("pos");
 function showPos(e){var c=e.target.closest&&e.target.closest(".cell");posEl.textContent=c?"x: "+c.dataset.k.replace(",",", y: "):"x: –, y: –"}

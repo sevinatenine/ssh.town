@@ -114,11 +114,24 @@ async function resolveUser(stream, fp) {
     return null;
 }
 
+async function logOutUser(name) {
+    db.accounts[name].keys = [];
+
+    for (var i of Object.keys(db.keys)) {
+        if (db.keys[i] == name) {
+            delete db.keys[i];
+        }
+    }
+
+    saveDb();
+}
+
 export {
     hashPw,
     checkPw,
     linkKey,
     fingerprint,
     verifyKey,
-    resolveUser
+    resolveUser,
+    logOutUser
 }

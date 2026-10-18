@@ -2,107 +2,156 @@
   "id": "town",
   "name": "Town",
   "spawn": {
-    "x": 8,
-    "y": 8
+    "x": 24,
+    "y": 14
   },
   "tileTypes": {
     "cobblestone": {
       "name": "Cobblestone",
-      "description": "Weathered stone lies on the ground below you.",
+      "description": "Weathered stone lies on the ground below you, worn smooth by years of foot traffic.",
       "symbol": "=",
       "color": "white"
     },
     "fountain": {
       "name": "Fountain",
-      "description": "A fountain sprays water from it's base. ",
+      "description": "A tranquil fountain sprays water from its base, creating a soothing melody and a haven from the hustle and bustle of town life.",
       "symbol": "f",
       "color": "cyan"
     },
     "grass": {
       "name": "Grass",
-      "description": "Grass yk",
+      "description": "Lush green grass stretches out before you, swaying gently in the breeze as it covers the earth.",
       "symbol": "'",
       "color": "green"
     },
     "tree": {
       "name": "Tree",
-      "description": "",
+      "description": "A towering tree stands above you, its branches reaching for the sky like a sentinel guarding the land below.",
       "symbol": "|",
       "color": "yellow"
     },
     "shop": {
       "name": "Shop",
-      "description": "A shop in town!",
+      "description": "The sign creaks in the wind outside this cozy shop, inviting customers to come and browse its wares inside.",
       "symbol": "$",
       "color": "yellowBright"
     },
     "house": {
       "name": "House",
-      "description": "A town house.",
+      "description": "A charming town house stands before you, its windows aglow with warm light spilling out onto the sidewalk.",
       "symbol": "^",
       "color": "blue",
       "portalTo": "house"
     },
     "inn": {
       "name": "Inn",
-      "description": "A place to eat, drink and sleep.",
+      "description": "Welcome weary travelers to this inn, where a hot meal, a cold drink, and a comfortable bed await your arrival.",
       "symbol": "%",
       "color": "greenBright",
       "portalTo": "inn"
     },
     "blacksmith": {
       "name": "Blacksmith",
-      "description": "A blacksmith ig",
+      "description": "The clang of hammer on anvil echoes through this busy blacksmith shop as craftsmen work tirelessly to forge new tools and armor for the town's residents.",
       "symbol": "b",
       "color": "white"
     },
     "town_hall": {
       "name": "Town Hall",
-      "description": "The town hall!",
+      "description": "At the heart of the town stands this grand Town Hall, where important decisions are made and civic business is conducted.",
       "symbol": "t",
       "color": "red"
     },
     "church": {
       "name": "Church",
-      "description": "A church",
+      "description": "A peaceful church stands tall, its stained glass windows filtering in shafts of light that illuminate the pews inside where prayers and sermons take place.",
       "symbol": "+",
       "color": "magenta"
     },
     "graveyard": {
       "name": "Graveyard",
-      "description": "Where the dead lie",
+      "description": "In quiet reverence lies this town's graveyard, a solemn reminder of life's preciousness and the inevitable passage of time.",
       "symbol": "g",
       "color": "cyan"
     },
     "stable": {
       "name": "Stable",
-      "description": "Horses!",
+      "description": "Horses whinny and nicker in their stalls as they are groomed and prepared for their next journey out into the world beyond the stable doors.",
       "symbol": "s",
       "color": "blue"
     },
     "stone_wall": {
       "name": "Stone Wall",
-      "description": "A wall to keep out goblins",
+      "description": "A sturdy stone wall surrounds the town, a barrier against external threats and a testament to the ingenuity of its builders.",
       "symbol": "#",
       "color": "white"
     },
     "stone_gate": {
       "name": "Stone Gate",
-      "description": "A gate",
+      "description": "The grand entrance to the town is marked by this impressive stone gate, adorned with symbols and crests that reflect the town's history and pride.",
       "symbol": "_",
       "color": "white"
     },
     "dirt": {
       "name": "Dirt",
-      "description": "Dirt",
+      "description": "Simple dirt stretches out before you, devoid of any notable features or landmarks, yet still a reminder of the earth's primordial simplicity.",
       "symbol": ".",
       "color": "yellow"
     },
     "tilled_dirt": {
       "name": "Tilled Dirt",
-      "description": "Tilled dirt - farm land?",
+      "description": "Tended to carefully by local farmers, this patch of tilled dirt represents hope for future harvests and the bounty of the land.",
       "symbol": "=",
       "color": "yellow"
+    },
+    "wooden_door": {
+      "name": "Wooden Door",
+      "description": "A sturdy wooden door stands firmly in place, its surface weathered from years of use as a portal between indoors and outdoors.",
+      "symbol": "|",
+      "color": "white"
+    },
+    "wooden_door_exit": {
+      "name": "Wooden Door",
+      "description": "This exit serves as a gateway to freedom, allowing you to step out into the wider world beyond the confines of your current location.",
+      "symbol": "|",
+      "color": "white",
+      "portalBack": true
+    },
+    "wooden_floor": {
+      "name": "Wooden Floor",
+      "description": "The wooden floor beneath your feet creaks softly with each step, a familiar comfort for those who spend their days within these walls.",
+      "symbol": "%",
+      "color": "yellow"
+    },
+    "dried_goods": {
+      "name": "Dried Goods",
+      "description": "Rows of dried meat, pickled vegetables, and herbs hang from the ceiling or lie in sacks on the floor, ready to be taken home by eager customers.",
+      "symbol": ":",
+      "color": "green"
+    },
+    "table": {
+      "name": "Table",
+      "description": "A sturdy table stands in this room, its surface scratched and worn from countless meals shared among friends and family.",
+      "symbol": "-",
+      "color": "yellow"
+    },
+    "tools": {
+      "name": "Tools",
+      "description": "Various tools lean against the wall here, a testament to the skilled hands of craftsmen who use them every day to shape the world around us.",
+      "symbol": "t",
+      "color": "blue"
+    },
+    "fireplace": {
+      "name": "Fireplace",
+      "description": "A warm fire crackles in the hearth, spilling light across the room as it dances on the flames that fuel its comforting warmth.",
+      "symbol": "!",
+      "color": "magentaBright"
+    },
+    "bed": {
+      "name": "Bed",
+      "description": "Soft and inviting, this bed beckons weary travelers to come and rest awhile, offering a sanctuary from the trials of the world outside these walls.",
+      "symbol": "~",
+      "color": "red"
     }
   },
   "tiles": [
@@ -459,82 +508,98 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 5,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 6,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 7,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 8,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 9,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 10,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 11,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 12,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 13,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 14,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 15,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 16,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 17,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 18,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 19,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -584,72 +649,86 @@
     {
       "type": "stone_wall",
       "x": 29,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 30,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 31,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 32,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 33,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 34,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 35,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 36,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 37,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 39,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 40,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 41,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 4
+      "y": 4,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -669,7 +748,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 5
+      "y": 5,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -744,7 +824,8 @@
     {
       "type": "stone_wall",
       "x": 19,
-      "y": 5
+      "y": 5,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -764,17 +845,20 @@
     {
       "type": "grass",
       "x": 23,
-      "y": 5
+      "y": 5,
+      "blocked": true
     },
     {
       "type": "grass",
       "x": 24,
-      "y": 5
+      "y": 5,
+      "blocked": true
     },
     {
       "type": "grass",
       "x": 25,
-      "y": 5
+      "y": 5,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -794,7 +878,8 @@
     {
       "type": "stone_wall",
       "x": 29,
-      "y": 5
+      "y": 5,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -859,7 +944,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 5
+      "y": 5,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -879,7 +965,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -954,22 +1041,26 @@
     {
       "type": "stone_wall",
       "x": 19,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 20,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 21,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 22,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "stone_gate",
@@ -989,22 +1080,26 @@
     {
       "type": "stone_wall",
       "x": 26,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 27,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 28,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 29,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1069,7 +1164,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 6
+      "y": 6,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1094,7 +1190,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 7
+      "y": 7,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1284,7 +1381,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 7
+      "y": 7,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1299,7 +1397,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 8
+      "y": 8,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1489,7 +1588,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 8
+      "y": 8,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1509,7 +1609,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 9
+      "y": 9,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1699,7 +1800,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 9
+      "y": 9,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1719,7 +1821,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 10
+      "y": 10,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1909,7 +2012,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 10
+      "y": 10,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -1929,7 +2033,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 11
+      "y": 11,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2119,7 +2224,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 11
+      "y": 11,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2144,7 +2250,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 12
+      "y": 12,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2334,7 +2441,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 12
+      "y": 12,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2369,7 +2477,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 13
+      "y": 13,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2559,7 +2668,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 13
+      "y": 13,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2594,7 +2704,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 14
+      "y": 14,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2784,7 +2895,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 14
+      "y": 14,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -2824,7 +2936,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 15
+      "y": 15,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3014,7 +3127,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 15
+      "y": 15,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3049,7 +3163,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 16
+      "y": 16,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3239,7 +3354,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 16
+      "y": 16,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3264,7 +3380,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 17
+      "y": 17,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3454,7 +3571,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 17
+      "y": 17,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3484,7 +3602,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 18
+      "y": 18,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3674,7 +3793,8 @@
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 18
+      "y": 18,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3704,7 +3824,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 19
+      "y": 19,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3879,22 +4000,26 @@
     {
       "type": "stone_wall",
       "x": 39,
-      "y": 19
+      "y": 19,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 40,
-      "y": 19
+      "y": 19,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 41,
-      "y": 19
+      "y": 19,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 42,
-      "y": 19
+      "y": 19,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -3924,7 +4049,8 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 20
+      "y": 20,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4094,12 +4220,14 @@
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 20
+      "y": 20,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 39,
-      "y": 20
+      "y": 20,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4149,12 +4277,14 @@
     {
       "type": "stone_wall",
       "x": 4,
-      "y": 21
+      "y": 21,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 5,
-      "y": 21
+      "y": 21,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4319,7 +4449,8 @@
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 21
+      "y": 21,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4374,12 +4505,14 @@
     {
       "type": "stone_wall",
       "x": 5,
-      "y": 22
+      "y": 22,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 6,
-      "y": 22
+      "y": 22,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4539,7 +4672,8 @@
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 22
+      "y": 22,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4599,12 +4733,14 @@
     {
       "type": "stone_wall",
       "x": 6,
-      "y": 23
+      "y": 23,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 7,
-      "y": 23
+      "y": 23,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4759,7 +4895,8 @@
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 23
+      "y": 23,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4819,12 +4956,14 @@
     {
       "type": "stone_wall",
       "x": 7,
-      "y": 24
+      "y": 24,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 8,
-      "y": 24
+      "y": 24,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -4974,7 +5113,8 @@
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 24
+      "y": 24,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -5039,12 +5179,14 @@
     {
       "type": "stone_wall",
       "x": 8,
-      "y": 25
+      "y": 25,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 9,
-      "y": 25
+      "y": 25,
+      "blocked": true
     },
     {
       "type": "tilled_dirt",
@@ -5189,7 +5331,8 @@
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 25
+      "y": 25,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -5249,72 +5392,86 @@
     {
       "type": "stone_wall",
       "x": 9,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 10,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 11,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 12,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 13,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 14,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 15,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 16,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 17,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 18,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 19,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 20,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 21,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 22,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_gate",
@@ -5334,67 +5491,80 @@
     {
       "type": "stone_wall",
       "x": 26,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 27,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 28,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 29,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 30,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 31,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 32,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 33,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 34,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 35,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 36,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 37,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "stone_wall",
       "x": 38,
-      "y": 26
+      "y": 26,
+      "blocked": true
     },
     {
       "type": "grass",
@@ -5509,17 +5679,20 @@
     {
       "type": "grass",
       "x": 23,
-      "y": 27
+      "y": 27,
+      "blocked": true
     },
     {
       "type": "grass",
       "x": 24,
-      "y": 27
+      "y": 27,
+      "blocked": true
     },
     {
       "type": "grass",
       "x": 25,
-      "y": 27
+      "y": 27,
+      "blocked": true
     },
     {
       "type": "grass",

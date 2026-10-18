@@ -1,15 +1,4 @@
 {
-  "accounts": {
-    "simon": {
-      "name": "simon",
-      "salt": "ab2442ed711bcfd3dc5157865c69ddc3",
-      "hash": "43c445884f9c18da6a16e02bfd0f41c970bfb31b4163697c5154a45b67b67f9a4f06b6bdd18581af8418ea849b94a727bdbdf86f5cee8d2e85f00b56e0370779",
-      "keys": [
-        "SHA256:TbPmS52Lu8bKqlztX5JL6ZsSd8LsxQqWrDQWoMSEpuc"
-      ]
-    }
-  },
-  "keys": {
-    "SHA256:TbPmS52Lu8bKqlztX5JL6ZsSd8LsxQqWrDQWoMSEpuc": "simon"
-  }
+  "accounts": {},
+  "keys": {}
 }
