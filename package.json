@@ -12,26 +12,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/composer": "0.28.0",
-    "@prisma/composer-prisma-cloud": "0.28.0",
     "@unblessed/node": "^1.0.0-alpha.23",
-    "alchemy": "2.0.0-beta.78",
     "chalk": "^6.0.1",
-    "effect": "4.0.0-rc.115",
     "ssh2": "^1.17.0"
-  },
-  "devDependencies": {
-    "prisma": "8.0.0-rc.21"
-  },
-  "overrides": {
-    "@effect/platform-bun": "4.0.0-rc.115",
-    "@effect/platform-node": "4.0.0-rc.115",
-    "@effect/platform-node-shared": "4.0.0-rc.115",
-    "@effect/sql-d1": "4.0.0-rc.115",
-    "@effect/sql-mysql2": "4.0.0-rc.115",
-    "@effect/sql-pg": "4.0.0-rc.115",
-    "@effect/sql-sqlite-do": "4.0.0-rc.115",
-    "@effect/vitest": "4.0.0-rc.115",
-    "effect": "4.0.0-rc.115"
   }
 }
