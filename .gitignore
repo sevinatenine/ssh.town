@@ -1,4 +1,5 @@
 keys/*
 node_modules/*
 data/accounts.mine.json
-data/users.mine.json
+data/users.mine.json.prisma-composer/
+.alchemy/
