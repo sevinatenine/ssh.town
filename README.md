@@ -5,7 +5,7 @@ A multiplayer town game you play over SSH, right in your terminal.
 ssh.town is part MUD, part tiny virtual world. Walk around ASCII maps, level up, earn money, chat with other players, and step inside buildings to interact with the game.
 
 ```bash
-ssh -p 2222 localhost
+ssh -p 34567 2a01:4f9:3080:3192::2144
 ```
 
 ## Features
