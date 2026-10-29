@@ -20,7 +20,24 @@ ssh -p 2222 localhost
 
 ## Getting started
 
-### Run the server
+### Connecting
+
+You can either SSH in directly to the server (hosted with Hack Club Nest) or you can use the web demo (which connects to the server itself).
+
+#### SSH
+
+`2a01:4f9:3080:3192::2144` is my Hack Club's Nest container's IPv6.
+`34567` is my free port.
+
+```bash
+ssh -p 34567 2a01:4f9:3080:3192::2144
+```
+
+#### Web demo
+
+Navigate to `ssh.simon312.hackclub.app`
+
+### Running the server locally
 
 ```bash
 npm run server
@@ -36,7 +53,7 @@ node src/main.js
 
 The server listens on port **2222** by default.
 
-### Connect
+### Connecting locally
 
 ```bash
 ssh -p 2222 localhost
